@@ -14,6 +14,10 @@ Url.new({ url: 'https://www.google.com', shortened: '1' }).save
 Url.new({ url: 'https://www.example.com', shortened: '2' }).save
 Url.new({ url: 'https://www.wikipedia.org', shortened: '3' }).save
 
+get '/' do
+  "Stuff to come soon!"
+end
+
 get '/url_index' do
   content_type :json
   urls_array = []
