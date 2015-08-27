@@ -12,7 +12,7 @@ end
 Url.new({ url: 'https://www.google.com', shortened: '1' }).save
 Url.new({ url: 'https://www.example.com', shortened: '2' }).save
 
-get '/urls' do
+get '/url_index' do
   content_type :json
   urls_array = []
   urls = Url.all
@@ -20,11 +20,15 @@ get '/urls' do
     urls_array.push(url_model.attributes)
   end
 
-  
+  urls_array.to_json
 end
 
-#
-# get '/:path' do
-#   url =
-#   if Url.where(params[:path]).size > 0
-#     redirect
+
+get '/:path' do
+  url_array = Url.where(shortened: params[:path])
+  if url_array.size > 0
+    redirect url_array.first.url
+  else
+    erb :invalid
+  end
+end
