@@ -15,6 +15,10 @@ get '/' do
   send_file './index.html'
 end
 
+get '/docs' do
+  send_file './docs.html'
+end
+
 get '/url_index' do
   content_type :json
   urls_array = []

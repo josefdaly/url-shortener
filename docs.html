@@ -1,0 +1,16 @@
+<h3>Routes</h3>
+<p>
+  get <strong>lync.space/</strong> will just bring you back here.
+</p>
+<p>
+  get <strong>lync.space/url_index</strong> will give you the contents of the database in JSON
+</p>
+<p>
+  get <strong>lync.space/:path</strong> will redirect you to the website that
+  corresponds to the :path if it is in the database.
+</p>
+<p>
+  post <strong>lync.space/new</strong> with params['url'] = 'https://example.com'
+  will generate a shortened url and save the pair to the database. The response
+  is a JSON of the new row in the database table.
+</p>
