@@ -1,14 +1,16 @@
-require_relative 'db_connection'
+require_relative 'db'
 require_relative 'searchable'
 require_relative 'associatable'
 require 'active_support/inflector'
+
+DB = Database.new
 
 class SQLObject
   extend Searchable
   extend Associatable
 
   def self.columns
-    everything = DBConnection.execute2(<<-SQL)
+    everything = DB.exec(<<-SQL)
       SELECT
         *
       FROM
@@ -36,7 +38,7 @@ class SQLObject
   end
 
   def self.all
-    results = DBConnection.execute(<<-SQL)
+    results = DB.exec(<<-SQL)
       SELECT
         #{table_name}.*
       FROM
@@ -56,7 +58,7 @@ class SQLObject
   end
 
   def self.find(id)
-    row = DBConnection.execute(<<-SQL, id)
+    row = DB.exec(<<-SQL, id)
       SELECT
         #{table_name}.*
       FROM
@@ -91,29 +93,29 @@ class SQLObject
   def insert
     columns = self.class.columns.drop(1)
     col_names = columns.map(&:to_s).join(", ")
-    question_marks = (["?"] * columns.count).join(", ")
-
-    DBConnection.execute(<<-SQL, *attribute_values.drop(1))
+    # question_marks = (["?"] * columns.count).join(", ")
+    vals = (1..self.class.columns.length - 1).to_a.map{ |el| '$' + el.to_s }.join(', ')
+    reply = DB.exec_params(<<-SQL, *attribute_values.drop(1))
       INSERT INTO
         #{self.class.table_name} (#{col_names})
       VALUES
-        (#{question_marks})
+        (#{vals})
     SQL
 
-    self.id = DBConnection.last_insert_row_id
+    self.id = reply[0]['id'].to_i
   end
 
   def update
     set_values = self.class.columns.drop(1).map { |column| "#{column} = ?" }
     set_values = set_values.join(',')
 
-    DBConnection.execute(<<-SQL, *attribute_values.drop(1), attribute_values.first)
+    DB.exec_params(<<-SQL, *attribute_values.drop(1), attribute_values.first)
       UPDATE
         #{self.class.table_name}
       SET
         #{set_values}
       WHERE
-        id = ?
+        id = #{self.id}
     SQL
   end
 
