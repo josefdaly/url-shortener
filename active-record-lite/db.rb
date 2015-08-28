@@ -7,12 +7,11 @@ class Database < PG::Connection
 
     # Database information retrieved from Heroku PostrgreSQL add-on
     super(
-      :adapter  => db.scheme == 'postgres' ? 'postgresql' : db.scheme,
-      :host     => db.host,
-      :username => db.user,
-      :password => db.password,
-      :database => db.path[1..-1],
-      :encoding => 'utf8'
+      host: db.host,
+      dbname: db.name,
+      port: db.port,
+      password: db.password,
+      user: db.user
     )
   end
 
