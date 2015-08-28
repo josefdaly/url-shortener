@@ -38,8 +38,7 @@
         data: { 'url': url },
         success: function (response) {
           $('.new-url').html("<a href='http://www.lync.space/" +
-            response.shortened + "'> http://www.lync.space/" +
-            response.shortened + "</a>");
+            response.shortened + "'> lync.space/" + response.shortened + "</a>");
           $('.url-input').val("");
         }.bind(this)
       })
