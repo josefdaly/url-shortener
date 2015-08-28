@@ -1,8 +1,8 @@
 require 'sinatra'
 require 'json'
 require 'securerandom'
-require_relative './active-record/db_connection'
-require_relative './active-record/sql_object'
+require_relative './active-record-lite/db_connection'
+require_relative './active-record-lite/sql_object'
 
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
@@ -43,11 +43,14 @@ post '/new' do
   condition = true
   long_url = params[:url]
   while condition
-    short_url = SecureRandom::base64(6)
-    condition = false unless Url.where( shortened: short_url ).size > 0
+    short_url = SecureRandom::urlsafe_base64(3)
+    unless Url.where( shortened: short_url ).size > 0
+      condition = false
+    end
   end
   if Url.where(url: long_url).size > 0
-    {}.to_json
+    existing_model = Url.where(url: long_url).first
+    existing_model.attributes.to_json
   else
     new_model = Url.new({ url: long_url, shortened: short_url })
     new_model.save
