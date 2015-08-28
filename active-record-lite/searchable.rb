@@ -1,4 +1,4 @@
-require_relative 'db_connection'
+require_relative 'db'
 require_relative 'sql_object'
 
 module Searchable
@@ -10,7 +10,7 @@ module Searchable
       vals << val
     end
     where = where.join(' AND ')
-    row_hashes = DBConnection.execute(<<-SQL, *vals)
+    row_hashes = DB.exec(<<-SQL, *vals)
       SELECT
         *
       FROM
