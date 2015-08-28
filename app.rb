@@ -1,7 +1,6 @@
 require 'sinatra'
 require 'json'
 require 'securerandom'
-require_relative './active-record-lite/db_connection'
 require_relative './active-record-lite/sql_object'
 
 Tilt.register Tilt::ERBTemplate, 'html.erb'
