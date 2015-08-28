@@ -1,4 +1,5 @@
 require_relative 'db'
+require 'byebug'
 require_relative 'searchable'
 require_relative 'associatable'
 require 'active_support/inflector'
@@ -10,6 +11,8 @@ class SQLObject
   extend Associatable
 
   def self.columns
+    return @columns if @columns
+
     everything = DB.exec(<<-SQL)
       SELECT
         *
@@ -19,7 +22,7 @@ class SQLObject
         0
     SQL
 
-    everything.first.map(&:to_sym)
+    @columns = everything.fields.map(&:to_sym)
   end
 
   def self.finalize!
@@ -95,11 +98,13 @@ class SQLObject
     col_names = columns.map(&:to_s).join(", ")
     # question_marks = (["?"] * columns.count).join(", ")
     vals = (1..self.class.columns.length - 1).to_a.map{ |el| '$' + el.to_s }.join(', ')
-    reply = DB.exec_params(<<-SQL, *attribute_values.drop(1))
+    
+    reply = DB.exec_params(<<-SQL, attribute_values.drop(1))
       INSERT INTO
         #{self.class.table_name} (#{col_names})
       VALUES
         (#{vals})
+      RETURNING id
     SQL
 
     self.id = reply[0]['id'].to_i

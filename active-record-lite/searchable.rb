@@ -5,12 +5,14 @@ module Searchable
   def where(params)
     where = []
     vals = []
+    idx = 1
     params.each do |key, val|
-      where << "#{key} = ?"
-      vals << val
+      where << "#{key} = $#{idx}"
+      idx += 1
     end
     where = where.join(' AND ')
-    row_hashes = DB.exec(<<-SQL, *vals)
+
+    row_hashes = DB.exec(<<-SQL, params.values)
       SELECT
         *
       FROM
@@ -19,6 +21,6 @@ module Searchable
         #{where}
     SQL
 
-    row_hashes.map { |hash| self.new(hash) }
+    self.parse_all(row_hashes)
   end
 end

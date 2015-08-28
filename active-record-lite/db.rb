@@ -7,11 +7,11 @@ class Database < PG::Connection
 
     # Database information retrieved from Heroku PostrgreSQL add-on
     super(
-      host: db.host,
-      dbname: db.hostname,
-      port: db.port,
-      password: db.password,
-      user: db.user
+      host: 'ec2-54-163-228-0.compute-1.amazonaws.com',
+      dbname: 'dfdsnvk155hlno',
+      port: '5432',
+      password: 'jXZ3ztIxGUw04NroXAqsg_ZWs5',
+      user: 'eliecontbeqane'
     )
   end
 
