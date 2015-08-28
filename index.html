@@ -22,3 +22,27 @@
   will generate a shortened url and save the pair to the database. The response
   is a JSON of the new row in the database table.
 </p>
+<input class="url-input" type="text" placeholder="https://www.example.com">
+<button type="button" class="submit-url">Create URL</button>
+<span class="new-url"></span>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript">
+  $('.submit-url').click(function () {
+    var url = $('.url-input').val()
+    if (url === "") {
+      $('.new-url').html("<span style='color:red'>Must enter a valid URL</span>");
+    } else {
+      $.ajax({
+        url: 'http://www.lync.space/new',
+        type: 'POST',
+        data: { 'url': url },
+        success: function (response) {
+          $('.new-url').html("<a href='http://www.lync.space/" +
+            response.shortened + "'> http://www.lync.space/" +
+            response.shortened + "</a>");
+          $('.url-input').val("");
+        }.bind(this)
+      })
+    }
+  }.bind(this));
+</script>
