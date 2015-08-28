@@ -8,7 +8,7 @@ class Database < PG::Connection
     # Database information retrieved from Heroku PostrgreSQL add-on
     super(
       host: db.host,
-      dbname: db.dbname,
+      # dbname: db.dbname,
       port: db.port,
       password: db.password,
       user: db.user
