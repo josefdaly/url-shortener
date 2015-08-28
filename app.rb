@@ -12,7 +12,7 @@ end
 url = Url.where({shortened: '1'})
 
 get '/' do
-  "Stuff to come soon!"
+  send_file './index.html'
 end
 
 get '/url_index' do
