@@ -10,7 +10,7 @@ class Url < SQLObject
 end
 
 get '/' do
-  send_file './public/htmlindex.html'
+  send_file './public/html/index.html'
 end
 
 get '/docs' do
