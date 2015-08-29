@@ -1,32 +1,54 @@
-<h1>Url Shortener</h1>
-<p>
-  Hello, you have arrived at my URL shortener. It's pretty basic at this point.
-  The special part about this app is that it utilizes my home-made object-relational
-  mapper <a href="https://github.com/josefdaly/active-record-lite">Active Record Lite</a>
-  to pull from and save to the database. Check out the whole thing
-  <a href="https://github.com/josefdaly/url-shortener">here</a>.
-</p>
+<!DOCTYPE html>
+<head>
+  <title>Short URL</title>
+  <link rel="stylesheet" href="public/css/stylesheet.css" charset="utf-8">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
 
-<input class="url-input" type="text" placeholder="https://www.example.com">
-<button type="button" class="submit-url">Create URL</button>
-<span class="new-url"></span>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script type="text/javascript">
-  $('.submit-url').click(function () {
-    var url = $('.url-input').val()
-    if (url === "") {
-      $('.new-url').html("<span style='color:red'>Must enter a valid URL</span>");
-    } else {
-      $.ajax({
-        url: 'http://www.lync.space/new',
-        type: 'POST',
-        data: { 'url': url },
-        success: function (response) {
-          $('.new-url').html("<a href='http://www.lync.space/" +
-            response.shortened + "'> lync.space/" + response.shortened + "</a>");
-          $('.url-input').val("");
-        }.bind(this)
-      })
-    }
-  }.bind(this));
-</script>
+<body>
+    <hr>
+    <h1 class="page-title">url shortener</h1>
+    <hr>
+
+    <div class="well">
+      <!-- <p>
+        Hello, you have arrived at my URL shortener. It's pretty basic at this point.
+        The special part about this app is that it utilizes my home-made object-relational
+        mapper <a href="https://github.com/josefdaly/active-record-lite">Active Record Lite</a>
+        to pull from and save to the database. Check out the whole thing
+        <a href="https://github.com/josefdaly/url-shortener">here</a>.
+      </p> -->
+      <span>Paste your long URL here: <span class="error"></span></span>
+
+      <div class="padding"></div>
+      <input class="url-input" type="text" placeholder="https://www.example.com">
+      <button type="button" class="submit-url">Create URL</button>
+    </div>
+
+    <div class="results hidden">
+      <span class="arrows">&#10095&#10095</span>
+      <span class="new-url"></span>
+    </div>
+
+    <script type="text/javascript">
+      $('.submit-url').click(function () {
+        var url = $('.url-input').val()
+        if (url === "") {
+          $('.error').html("Must enter a valid URL");
+        } else {
+          $.ajax({
+            url: 'http://www.lync.space/new',
+            type: 'POST',
+            data: { 'url': url },
+            success: function (response) {
+              $('.error').html("")
+              $('.hidden').removeClass('hidden')
+              $('.new-url').html("http://lync.space/" + response.shortened);
+              $('.url-input').val("");
+            }.bind(this)
+          })
+        }
+      }.bind(this));
+    </script>
+  </body>
+</html>

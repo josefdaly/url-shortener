@@ -9,8 +9,6 @@ class Url < SQLObject
   self.finalize!
 end
 
-url = Url.where({shortened: '1'})
-
 get '/' do
   send_file './index.html'
 end
