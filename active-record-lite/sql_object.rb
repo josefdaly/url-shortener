@@ -50,6 +50,35 @@ class SQLObject
     self.parse_all(results)
   end
 
+  def self.last(n = 1)
+    results = DB.exec(<<-SQL)
+      SELECT
+        #{table_name}.*
+      FROM
+        #{table_name}
+      ORDER BY
+        #{table_name}.id
+      DESC
+      LIMIT #{n}
+    SQL
+
+    self.parse_all(results)
+  end
+
+  def self.first(n = 1)
+    results = DB.exec(<<-SQL)
+      SELECT
+        #{table_name}.*
+      FROM
+        #{table_name}
+      ORDER BY
+        #{table_name}.id
+      LIMIT #{n}
+    SQL
+
+    self.parse_all(results)
+  end
+
   def self.parse_all(results)
     all_arr = []
     results.each do |attrs_hash|

@@ -13,6 +13,30 @@ get '/' do
   send_file './public/html/index.html'
 end
 
+get '/most_recent/:amount' do
+  content_type :json
+  amount = params[:amount].to_i
+  urls_array = []
+  urls = Url.last(amount)
+  urls.each do |url_model|
+    urls_array.push(url_model.attributes)
+  end
+
+  urls_array.to_json
+end
+
+get '/oldest/:amount' do
+  content_type :json
+  amount = params[:amount].to_i
+  urls_array = []
+  urls = Url.first(amount)
+  urls.each do |url_model|
+    urls_array.push(url_model.attributes)
+  end
+
+  urls_array.to_json
+end
+
 get '/docs' do
   send_file './docs.html'
 end
