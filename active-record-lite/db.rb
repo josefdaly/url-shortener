@@ -3,9 +3,6 @@ require 'pg'
 class Database < PG::Connection
 
   def initialize
-    db = URI.parse(ENV['DATABASE_URL'] || 'postgres:///localhost/mydb')
-
-    # Database information retrieved from Heroku PostrgreSQL add-on
     super(
       host: 'ec2-54-163-228-0.compute-1.amazonaws.com',
       dbname: 'dfdsnvk155hlno',

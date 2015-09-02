@@ -8,21 +8,21 @@
 <body>
     <hr>
     <h1 class="page-title">url shortener</h1>
+    <span class="attributions">Powered by <a href="http://www.sinatrarb.com">Sinatra</a> and <a href="https://github.com/josefdaly/active-record-lite">Active Record Lite</a></span>
     <hr>
 
-    <div class="well">
-      <!-- <p>
-        Hello, you have arrived at my URL shortener. It's pretty basic at this point.
-        The special part about this app is that it utilizes my home-made object-relational
-        mapper <a href="https://github.com/josefdaly/active-record-lite">Active Record Lite</a>
-        to pull from and save to the database. Check out the whole thing
-        <a href="https://github.com/josefdaly/url-shortener">here</a>.
-      </p> -->
-      <span>Paste your long URL here: <span class="error"></span></span>
-
-      <div class="padding"></div>
-      <input class="url-input" type="text" placeholder="https://www.example.com">
-      <button type="button" class="submit-url">Create URL</button>
+    <div class="left-box">
+      <div class="well">
+        <span>Paste your long URL here: <span class="error"></span></span>
+        <div class="padding"></div>
+        <input class="url-input" type="text" placeholder="https://www.example.com">
+        <button type="button" class="submit-url">Create URL</button>
+      </div>
+      <div class="recent-links-title">
+        <span class="long-url-header"><strong>Long URL</strong></span>
+          <span class="short-url-header"><strong>Short URL</strong></span>
+      </div>
+      <ul class="recent-links"></ul>
     </div>
 
     <div class="results hidden">
@@ -30,7 +30,32 @@
       <span class="new-url"></span>
     </div>
 
+
+    </ul>
+
     <script type="text/javascript">
+      var fetchRecent = function () {
+        $.ajax({
+          url: 'http://www.lync.space/most_recent/5',
+          type: 'GET',
+          success: function (response) {
+            var $recentLinks = $('.recent-links')
+            response.forEach(function (entry) {
+              if (entry.url.length > 36){
+                long_url = entry.url.slice(0,36) + '...';
+              } else {
+                long_url = entry.url
+              }
+              $recentLinks.append(
+                "<li><a class='long-url' href='" + entry.url + "'>" + long_url +
+                "</a><a class='short-url' href='http://www.lync.space/" + entry.shortened +
+                "'>lync.space/" + entry.shortened +"</a></li>"
+              )
+            }.bind(this))
+          }.bind(this)
+        })
+      }
+
       $('.submit-url').click(function () {
         var url = $('.url-input').val()
         if (url === "") {
@@ -45,10 +70,14 @@
               $('.hidden').removeClass('hidden')
               $('.new-url').html("http://lync.space/" + response.shortened);
               $('.url-input').val("");
+              $('.recent-links').html("")
+              fetchRecent();
             }.bind(this)
           })
         }
       }.bind(this));
+
+      $(document).ready(fetchRecent())
     </script>
   </body>
 </html>
