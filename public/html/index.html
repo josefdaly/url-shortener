@@ -41,8 +41,8 @@
           success: function (response) {
             var $recentLinks = $('.recent-links')
             response.forEach(function (entry) {
-              if (entry.url.length > 36){
-                long_url = entry.url.slice(0,36) + '...';
+              if (entry.url.length > 32){
+                long_url = entry.url.slice(0,32) + '...';
               } else {
                 long_url = entry.url
               }
