@@ -114,6 +114,16 @@ get '/clicker_index' do
   clickers_array.to_json
 end
 
+get '/details/:path' do
+  content_type :json
+  url = Url.where(shortened: params[:path]).first
+  if url
+    url.attributes.to_json
+  else
+    { error: 'no such path' }.to_json
+  end
+end
+
 get '/:path' do
   @ip = request.ip
 
