@@ -8,6 +8,14 @@ Tilt.register Tilt::ERBTemplate, 'html.erb'
 class Url < SQLObject
   self.finalize!
 end
+# Not Yet!
+# class Clicks < SQLObject
+#   self.finalize!
+# end
+#
+# class Clickers < SQLObject
+#   self.finalize!
+# end
 
 get '/' do
   send_file './public/html/index.html'
@@ -53,6 +61,7 @@ get '/url_index' do
 end
 
 get '/:path' do
+  @ip = request.ip
   url_array = Url.where(shortened: params[:path])
   if url_array.size > 0
     redirect url_array.first.url
