@@ -6,16 +6,36 @@ require_relative './active-record-lite/sql_object'
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class Url < SQLObject
+  has_many('clicks', {
+    class_name: 'Click',
+    primary_key: 'id',
+    foreign_key: 'url_id'
+  })
   self.finalize!
 end
-# Not Yet!
-# class Clicks < SQLObject
-#   self.finalize!
-# end
-#
-# class Clickers < SQLObject
-#   self.finalize!
-# end
+
+class Click < SQLObject
+  belongs_to('url', {
+    class_name: 'Url',
+    primary_key: 'id',
+    foreign_key: 'url_id'
+  })
+  belongs_to('clicker', {
+    class_name: 'Clicker',
+    primary_key: 'id',
+    foreign_key: 'clicker_id'
+  })
+  self.finalize!
+end
+
+class Clicker < SQLObject
+  has_many('clicks',{
+    class_name: 'Click',
+    primary_key: 'id',
+    foreign_key: 'clicker_id'
+  })
+  self.finalize!
+end
 
 get '/' do
   send_file './public/html/index.html'
