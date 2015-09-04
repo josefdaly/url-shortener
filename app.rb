@@ -74,8 +74,15 @@ get '/url_index' do
   content_type :json
   urls_array = []
   urls = Url.all
+  # byebug
   urls.each do |url_model|
-    urls_array.push(url_model.attributes)
+    num_clicks = 0;
+    if url_model.clicks.count
+      num_clicks = url_model.clicks.count
+    end
+    urls_array.push(url_model.attributes.merge({
+      'num_clicks' => num_clicks
+    }))
   end
 
   urls_array.to_json
