@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require 'securerandom'
+require 'byebug'
 require_relative './active-record-lite/sql_object'
 
 Tilt.register Tilt::ERBTemplate, 'html.erb'
@@ -80,11 +81,50 @@ get '/url_index' do
   urls_array.to_json
 end
 
+get '/click_index' do
+  content_type :json
+  clicks_array = []
+  clicks = Click.all
+  clicks.each do |click_model|
+    clicks_array.push(click_model.attributes.merge({
+      'url' => click_model.url.attributes,
+      'clicker' => click_model.clicker.attributes
+    }))
+  end
+
+  clicks_array.to_json
+end
+
+get '/clicker_index' do
+  content_type :json
+  clickers_array = []
+  clickers = Clicker.all
+  clickers.each do |clicker_model|
+    clickers_array.push(clicker_model.attributes.merge({
+      'num_clicks' => clicker_model.clicks.count
+    }))
+  end
+
+  clickers_array.to_json
+end
+
 get '/:path' do
   @ip = request.ip
+
   url_array = Url.where(shortened: params[:path])
+
   if url_array.size > 0
-    redirect url_array.first.url
+    url_model = url_array.first
+
+    clicker = Clicker.where(ip_address: @ip).first
+
+    unless clicker
+      clicker = Clicker.new(ip_address: @ip)
+      clicker.save
+    end
+    Click.new({ url_id: url_model.id, clicker_id: clicker.id }).save
+
+    redirect url_model.url
   else
     erb :invalid
   end
