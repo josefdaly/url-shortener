@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 require 'securerandom'
 require_relative './active-record-lite/sql_object'
-
+require 'byebug'
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class Url < SQLObject
@@ -47,10 +47,17 @@ get '/most_recent/:amount' do
   urls_array = []
   urls = Url.last(amount)
   urls.each do |url_model|
-    urls_array.push(url_model.attributes)
+    urls_array.push(url_model.attributes.merge({ clicks: url_model.clicks.count }))
   end
 
   urls_array.to_json
+end
+
+get '/test' do
+  content_type :json
+  url_model = Url.all.last
+  debugger
+  { clicks: url_model.clicks.count }.to_json
 end
 
 get '/oldest/:amount' do
@@ -73,7 +80,6 @@ get '/url_index' do
   content_type :json
   urls_array = []
   urls = Url.all
-  # byebug
   urls.each do |url_model|
     num_clicks = 0;
     if url_model.clicks.count
@@ -126,24 +132,31 @@ end
 
 get '/:path' do
   @ip = request.ip
-
   url_array = Url.where(shortened: params[:path])
-
   if url_array.size > 0
     url_model = url_array.first
-
     clicker = Clicker.where(ip_address: @ip).first
-
     unless clicker
       clicker = Clicker.new(ip_address: @ip)
       clicker.save
     end
     Click.new({ url_id: url_model.id, clicker_id: clicker.id }).save
-
     redirect url_model.url
   else
     erb :invalid
   end
+end
+
+get '/click_count/:path' do
+  content_type :json
+  url_model = Url.where(shortened: params[:path]).first
+  num_clicks = 0
+  clicks = url_model.clicks
+  if clicks
+    num_clicks = clicks.count
+  end
+
+  { clicks: clicks.count }.to_json
 end
 
 post '/new' do
