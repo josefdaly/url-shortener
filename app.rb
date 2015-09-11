@@ -2,7 +2,7 @@ require 'sinatra'
 require 'json'
 require 'securerandom'
 require_relative './active-record-lite/sql_object'
-require 'byebug'
+# require 'byebug'
 Tilt.register Tilt::ERBTemplate, 'html.erb'
 
 class Url < SQLObject
