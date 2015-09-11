@@ -21,6 +21,7 @@
       <div class="recent-links-title">
         <span class="long-url-header"><strong>Long URL</strong></span>
           <span class="short-url-header"><strong>Short URL</strong></span>
+          <span class="clicks-header"><strong>Clicks</strong></span>
       </div>
       <ul class="recent-links"></ul>
     </div>
@@ -42,11 +43,11 @@
             var $recentLinks = $('.recent-links')
             response.forEach(function (entry) {
               if (entry.url.length > 32){
-                long_url = entry.url.slice(0,32) + '...';
+                long_url = entry.url.slice(0,22) + '...';
               } else {
                 long_url = entry.url
               }
-              debugger
+              
               $recentLinks.append(
                 "<li><a class='long-url' href='" + entry.url + "'>" + long_url +
                 "</a><a class='short-url' href='http://www.lync.space/" + entry.shortened +

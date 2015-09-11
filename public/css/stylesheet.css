@@ -15,13 +15,19 @@ a {
 }
 
 .long-url-header {
-  width: 55%;
+  width: 41%;
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.clicks-header{
+  width: 14%;
   display: inline-block;
   margin-left: 20px;
 }
 
 .short-url-header {
-  width: 34%;
+  width: 30%;
   display: inline-block;
   margin-left: 20px;
 }
@@ -125,13 +131,13 @@ a {
 
 .long-url {
   display: inline-block;
-  width: 65%;
+  width: 49%;
   height: 15px;
 }
 
 .short-url {
   display: inline-block;
-  width: 35%;
+  width: 42%;
   height: 15px;
 }
 
