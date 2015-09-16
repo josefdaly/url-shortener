@@ -47,7 +47,7 @@
               } else {
                 long_url = entry.url
               }
-              
+
               $recentLinks.append(
                 "<li><a class='long-url' href='" + entry.url + "'>" + long_url +
                 "</a><a class='short-url' href='http://www.lync.space/" + entry.shortened +
@@ -61,7 +61,7 @@
 
       $('.submit-url').click(function () {
         var url = $('.url-input').val()
-        if (url === "") {
+        if ((url === "") || (url.slice(0,4).toLowerCase() != 'http')) {
           $('.error').html("Must enter a valid URL");
         } else {
           $.ajax({
